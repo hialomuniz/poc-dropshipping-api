@@ -1,4 +1,4 @@
-from flask import render_template, abort
+from flask import redirect, render_template, url_for, abort
 from flask_login import login_required, current_user
 
 from . import home
@@ -6,6 +6,9 @@ from . import home
 
 @home.route('/')
 def homepage():
+    if current_user.is_authenticated and current_user.tipo_usuario:
+        return redirect(url_for('home.dashboard'))
+
     return render_template('home/index.html', title="Página inicial")
 
 

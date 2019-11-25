@@ -1,5 +1,5 @@
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 
 from dropshipping.auth import auth
 from dropshipping.auth.forms import LoginForm
@@ -8,6 +8,9 @@ from dropshipping.models.usuario import Usuario
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated and current_user.tipo_usuario:
+        return redirect(url_for('home.dashboard'))
+
     form = LoginForm()
 
     if form.validate_on_submit():

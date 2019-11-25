@@ -1,10 +1,11 @@
 from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
+from dropshipping import db
 from dropshipping.admin import admin
 from dropshipping.admin.fornecedores.forms import FornecedorForm, FornecedorEditForm
 from dropshipping.admin.produtos.forms import ProdutoForm, ProdutoEditForm
-from dropshipping import db
+from dropshipping.admin.categorias.forms import CategoriaForm, CategoriaEditForm
 
 from dropshipping.models.fornecedor import Fornecedor
 from dropshipping.models.produto import Produto
@@ -63,11 +64,13 @@ def edit_fornecedor(id):
     fornecedor = Fornecedor.query.get_or_404(id)
 
     form = FornecedorEditForm(obj=fornecedor)
+    print(form.ativo.data)
 
     if form.validate_on_submit():
         fornecedor.nome_fantasia = form.nome_fantasia.data
         fornecedor.cnpj = form.cnpj.data
         fornecedor.url = form.url.data
+        fornecedor.ativo = True if form.ativo.data == 1 else False
 
         db.session.commit()
         flash('Fornecedor editado com sucesso!')
@@ -95,6 +98,87 @@ def delete_fornecedor(id):
     return redirect(url_for('admin.list_fornecedores'))
 
     return render_template(title="Deletar fornecedor")
+
+
+"""
+Rotas para cadastro de categorias
+"""
+@admin.route('/categorias', methods=['GET', 'POST'])
+@login_required
+def list_categorias():
+    check_admin()
+
+    categorias = Categoria.query.all()
+    print(len(categorias))
+
+    return render_template('admin/categorias/list.html', categorias=categorias, title="Lista de Categorias Cadastradas")
+
+
+@admin.route('/categorias/add', methods=['GET', 'POST'])
+@login_required
+def add_categoria():
+    check_admin()
+
+    form = CategoriaForm()
+
+    if form.validate_on_submit():
+        categoria = Categoria(nome=form.nome.data,
+                              descricao=form.descricao.data)
+        try:
+            db.session.add(categoria)
+            db.session.commit()
+
+            flash('Categoria adicionada com sucesso!')
+        except:
+            flash('Erro ao adicionar categoria!')
+
+        return redirect(url_for('admin.list_categorias'))
+
+    return render_template('admin/categorias/add.html',
+                           form=form,
+                           title="Adicionar Categoria")
+
+
+@admin.route('/categorias/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_categoria(id):
+    check_admin()
+
+    categoria = Categoria.query.get_or_404(id)
+
+    form = CategoriaEditForm(obj=categoria)
+
+    if form.validate_on_submit():
+        categoria.nome = form.nome.data
+        categoria.descricao = form.descricao.data
+
+        db.session.commit()
+
+        flash('Categoria editada com sucesso!')
+
+        return redirect(url_for('admin.list_categorias'))
+
+    return render_template('admin/categorias/edit.html',
+                           form=form,
+                           categoria=categoria,
+                           title="Editar categoria")
+
+
+@admin.route('/categorias/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_categoria(id):
+    check_admin()
+
+    categoria = Categoria.query.get_or_404(id)
+
+    db.session.delete(categoria)
+    db.session.commit()
+
+    flash('Categoria deletada com sucesso')
+
+    return redirect(url_for('admin.list_categorias'))
+
+    return render_template(title="Deletar categoria")
 
 
 """

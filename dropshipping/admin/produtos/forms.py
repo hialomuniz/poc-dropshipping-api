@@ -5,8 +5,9 @@ from wtforms.validators import DataRequired, Length
 
 
 class ProdutoForm(FlaskForm):
-    nome = StringField('Nome', validators=[DataRequired('É necessário preencher este campo!'), Length(0, 80, 'Máximo de 80 caracteres')])
-    descricao = StringField('Descrição', validators=[DataRequired('É necessário preencher este campo!'), Length(0, 200, 'Máximo de 200 caracteres')])
+    nome = StringField('Nome', validators=[DataRequired('É necessário preencher este campo!'), Length(max=80, message='Máximo de 80 caracteres')])
+    descricao = StringField('Descrição', validators=[DataRequired('É necessário preencher este campo!'),
+                                                     Length(max=200, message='Máximo de 200 caracteres')])
     preco = DecimalField('Preço (R$)', places=2)
     quantidade = IntegerField('Quantidade')
     imagem = FileField('Imagem')
@@ -17,9 +18,10 @@ class ProdutoForm(FlaskForm):
 
 
 class ProdutoEditForm(FlaskForm):
-    nome = StringField('Nome', validators=[DataRequired('É necessário preencher este campo!'), Length(0, 80, 'Máximo de 80 caracteres')])
-    descricao = StringField('Descrição', validators=[DataRequired('É necessário preencher este campo!'), Length(0, 200, 'Máximo de 200 caracteres')])
-    preco = DecimalField('Preço (R$)')
+    nome = StringField('Nome', validators=[DataRequired('É necessário preencher este campo!'), Length(max=80, message='Máximo de 80 caracteres')])
+    descricao = StringField('Descrição', validators=[DataRequired('É necessário preencher este campo!'),
+                                                     Length(max=200, message='Máximo de 200 caracteres')])
+    preco = DecimalField('Preço (R$)', places=2)
     quantidade = IntegerField('Quantidade')
     imagem = FileField('Imagem')
     categoria = SelectField('Categoria', coerce=int)
