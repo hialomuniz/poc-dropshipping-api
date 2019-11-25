@@ -7,20 +7,18 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+    <nav class="navbar navbar-inverse navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
           <div class="navbar-header">
               {% if current_user.is_authenticated %}
-              <a class="navbar-brand topnav" href="{{ url_for('home.dashboard') }}">Olá, {{ current_user.email }}!</a>
+              <span class="navbar-text">Olá, {{ current_user.email }}!</span>
               {% endif %}
           </div>
+
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
                 <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %}
-                    <!--
-                    <li><a><i class="fa fa-user"></i>  Olá, {{ current_user.email }}!</a></li>
-                    -->   
+                    {% if current_user.is_authenticated %}  
                     <li><a href="{{ url_for('home.dashboard') }}">Produtos</a></li>
                     <li><a href="{{ url_for('admin.list_fornecedores') }}">Fornecedores</a></li>
                     <li><a href="{{ url_for('home.dashboard') }}">Categorias</a></li>

@@ -4,42 +4,40 @@ body, html {
 }
 
 body, h1, h2, h3 {
-    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Courier New', Courier, monospace;
+    /* font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif; */
     font-weight: 700;
 }
 
 a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
-  color: #4a3074;
+  color: #1bccae;
 }
 
 a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
-  color: #4a3074;
+  color: #1bccae;
 }
 
-footer {
-    padding: 50px 0;
-    background-color: #f8f8f8;
-}
-
-p.copyright {
-    margin: 15px 0 0;
+.navbar-inverse .navbar-text {
+    color: #1bccae;
 }
 
 .alert-info {
     width: 50%;
     margin: auto;
-    color: #687430;
-    background-color: #e6ecca;
-    border-color: #aec251;
+    text-align: center;
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #000000;
+    font-style: italic;
 }
 
 .btn-default {
-    border-color: #aec251;
-    color: #aec251;
+    border-color: #000000;
+    color: #000000;
 }
 
 .btn-default:hover {
-    background-color: #aec251;
+    background-color: #ffffff;
 }
 
 .center {
@@ -50,7 +48,7 @@ p.copyright {
 
 .login-center {
     margin: auto;
-    width: 50%;
+    width: 40%;
     padding: 10px;
 }
 
@@ -102,6 +100,7 @@ p.copyright {
 }
 
 .topnav {
+    font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
 }
 

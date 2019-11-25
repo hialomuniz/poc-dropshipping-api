@@ -2,7 +2,7 @@ from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from dropshipping.admin import admin
-from dropshipping.admin.forms import FornecedorForm
+from dropshipping.admin.forms import FornecedorForm, FornecedorEditForm
 from dropshipping import db
 from dropshipping.models.fornecedor import Fornecedor
 
@@ -56,7 +56,7 @@ def edit_fornecedor(id):
 
     fornecedor = Fornecedor.query.get_or_404(id)
 
-    form = FornecedorForm(obj=fornecedor)
+    form = FornecedorEditForm(obj=fornecedor)
 
     if form.validate_on_submit():
         fornecedor.nome_fantasia = form.nome_fantasia.data
