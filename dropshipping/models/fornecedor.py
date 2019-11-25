@@ -11,6 +11,6 @@ class Fornecedor(db.Model):
     cnpj = db.Column(db.String(14), index=True, unique=True, nullable=False)
     url = db.Column(db.String(100), index=False, unique=False, nullable=False)
     data_criacao = db.Column(db.DateTime, index=False, unique=False, nullable=False, default=datetime.utcnow)
-    ativo = db.Column(db.Integer)
+    ativo = db.Column(db.Boolean, default=True)
 
     produtos = db.relationship('Produto', backref='fornecedor', lazy='dynamic')

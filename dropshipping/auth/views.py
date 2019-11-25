@@ -15,9 +15,12 @@ def login():
 
         # if usuario is not None and usuario.verify_password(form.password.data):
         if usuario is not None:
-            login_user(usuario)
+            if usuario.tipo_usuario:
+                login_user(usuario)
 
-            return redirect(url_for('home.dashboard'))
+                return redirect(url_for('home.dashboard'))
+            else:
+                flash('Este usuário não possui permissão para acessar o módulo administrativo!')
         else:
             flash('E-mail ou senha inválidos!')
 
