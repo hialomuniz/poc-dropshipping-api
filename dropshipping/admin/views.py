@@ -2,9 +2,13 @@ from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from dropshipping.admin import admin
-from dropshipping.admin.forms import FornecedorForm, FornecedorEditForm
+from dropshipping.admin.fornecedores.forms import FornecedorForm, FornecedorEditForm
+from dropshipping.admin.produtos.forms import ProdutoForm, ProdutoEditForm
 from dropshipping import db
+
 from dropshipping.models.fornecedor import Fornecedor
+from dropshipping.models.produto import Produto
+from dropshipping.models.categoria import Categoria
 
 
 def check_admin():
@@ -12,6 +16,9 @@ def check_admin():
         abort(403)
 
 
+"""
+Rotas para cadastro de fornecedores
+"""
 @admin.route('/fornecedores', methods=['GET', 'POST'])
 @login_required
 def list_fornecedores():
@@ -19,7 +26,7 @@ def list_fornecedores():
 
     fornecedores = Fornecedor.query.all()
 
-    return render_template('admin/fornecedores/fornecedores.html', fornecedores=fornecedores, title="Fornecedores")
+    return render_template('admin/fornecedores/list.html', fornecedores=fornecedores, title="Fornecedores")
 
 
 @admin.route('/fornecedores/add', methods=['GET', 'POST'])
@@ -44,7 +51,6 @@ def add_fornecedor():
         return redirect(url_for('admin.list_fornecedores'))
 
     return render_template('admin/fornecedores/add.html',
-                           action="Add",
                            form=form,
                            title="Adicionar fornecedor")
 
@@ -68,18 +74,15 @@ def edit_fornecedor(id):
 
         return redirect(url_for('admin.list_fornecedores'))
 
-    #  form.description.data = department.description
-    #  form.name.data = department.name
     return render_template('admin/fornecedores/edit.html',
-                           action="Edit",
                            form=form,
                            fornecedor=fornecedor,
                            title="Editar fornecedor")
 
 
-@admin.route('/departments/delete/<int:id>', methods=['GET', 'POST'])
+@admin.route('/fornecedores/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def delete_department(id):
+def delete_fornecedor(id):
     check_admin()
 
     fornecedor = Fornecedor.query.get_or_404(id)
@@ -92,3 +95,123 @@ def delete_department(id):
     return redirect(url_for('admin.list_fornecedores'))
 
     return render_template(title="Deletar fornecedor")
+
+
+"""
+Rotas para cadastro de produtos
+"""
+@admin.route('/produtos', methods=['GET', 'POST'])
+@login_required
+def list_produtos():
+    check_admin()
+
+    produtos = Produto.query.all()
+
+    return render_template('admin/produtos/list.html', produtos=produtos, title="Lista de Produtos Cadastrados")
+
+
+@admin.route('/produtos/add', methods=['GET', 'POST'])
+@login_required
+def add_produto():
+    check_admin()
+
+    fornecedores = Fornecedor.query.all()
+    categorias = Categoria.query.all()
+
+    if fornecedores is None or len(fornecedores) == 0:
+        flash('Não existem fornecedores cadastrados!')
+
+        return redirect(url_for('admin.list_produtos'))
+    elif categorias is None or len(categorias) == 0:
+        flash('Não existem categorias cadastradas!')
+
+        return redirect(url_for('admin.list_produtos'))
+    else:
+        form = ProdutoForm()
+        form.fornecedor.choices = [(f.id, f.nome_fantasia) for f in fornecedores]
+        form.categoria.choices = [(c.id, c.nome) for c in categorias]
+
+        print('categoria')
+        print(form.categoria.data)
+
+        if form.validate_on_submit():
+            produto = Produto(nome=form.nome.data,
+                              descricao=form.descricao.data,
+                              preco=form.preco.data,
+                              quantidade=form.quantidade.data,
+                              img=form.imagem.data,
+                              id_categoria=form.categoria.data,
+                              id_fornecedor=form.fornecedor.data)
+            try:
+                db.session.add(produto)
+                db.session.commit()
+
+                flash('Produto adicionado com sucesso!')
+            except:
+                flash('Erro ao adicionar produto!')
+
+            return redirect(url_for('admin.list_produtos'))
+
+        return render_template('admin/produtos/add.html',
+                               form=form,
+                               title="Adicionar Produto")
+
+
+@admin.route('/produtos/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_produto(id):
+    check_admin()
+
+    produto = Produto.query.get_or_404(id)
+
+    fornecedores = Fornecedor.query.all()
+    categorias = Categoria.query.all()
+
+    if fornecedores is None or len(fornecedores) == 0:
+        flash('Não existem fornecedores cadastrados!')
+
+        return redirect(url_for('admin.list_produtos'))
+    elif categorias is None or len(categorias) == 0:
+        flash('Não existem categorias cadastradas!')
+
+        return redirect(url_for('admin.list_produtos'))
+
+    form = ProdutoEditForm(obj=produto)
+    form.fornecedor.choices = [(f.id, f.nome_fantasia) for f in fornecedores]
+    form.categoria.choices = [(c.id, c.nome) for c in categorias]
+
+    if form.validate_on_submit():
+        produto.nome = form.nome.data
+        produto.descricao = form.descricao.data
+        produto.preco = form.preco.data
+        produto.quantidade = form.quantidade.data
+        produto.img = form.imagem.data
+        produto.id_categoria = form.categoria.data
+        produto.id_fornecedor = form.fornecedor.data
+
+        db.session.commit()
+        flash('Produto editado com sucesso!')
+
+        return redirect(url_for('admin.list_produtos'))
+
+    return render_template('admin/produtos/edit.html',
+                           form=form,
+                           produto=produto,
+                           title="Editar produto")
+
+
+@admin.route('/produtos/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_produto(id):
+    check_admin()
+
+    produto = Produto.query.get_or_404(id)
+
+    db.session.delete(produto)
+    db.session.commit()
+
+    flash('Produto deletado com sucesso')
+
+    return redirect(url_for('admin.list_produtos'))
+
+    return render_template(title="Deletar produto")

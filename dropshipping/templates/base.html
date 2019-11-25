@@ -19,7 +19,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}  
-                    <li><a href="{{ url_for('home.dashboard') }}">Produtos</a></li>
+                    <li><a href="{{ url_for('admin.list_produtos') }}">Produtos</a></li>
                     <li><a href="{{ url_for('admin.list_fornecedores') }}">Fornecedores</a></li>
                     <li><a href="{{ url_for('home.dashboard') }}">Categorias</a></li>
                     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>

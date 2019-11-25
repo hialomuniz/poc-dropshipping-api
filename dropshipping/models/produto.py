@@ -1,6 +1,9 @@
 from dropshipping import db
 from datetime import datetime
 
+from dropshipping.models.fornecedor import Fornecedor
+from dropshipping.models.categoria import Categoria
+
 
 class Produto(db.Model):
     __tablename__ = 'produto'
@@ -18,3 +21,9 @@ class Produto(db.Model):
     id_fornecedor = db.Column(db.Integer, db.ForeignKey('fornecedor.id'))
 
     promocoes = db.relationship('Promocao', secondary='produtopromocao')
+
+    def fornecedor_as_str(self):
+        return Fornecedor.query.get(self.id_fornecedor).nome_fantasia
+
+    def categoria_as_str(self):
+        return Categoria.query.get(self.id_categoria).nome

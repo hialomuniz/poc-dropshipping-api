@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% import "bootstrap/utils.html" as utils %}
+{% block title %}Produtos{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+      <div class="inner">
+        <br/>
+        {{ utils.flashed_messages() }}
+        <br/>
+        <h1 style="text-align:center;">Produtos</h1>
+        {% if produtos %}
+          <hr class="intro-divider">
+          <div class="center">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="10%"> Nome </th>
+                  <th width="30%"> Descrição </th>
+                  <th width="5%"> Preço </th>
+                  <th width="5%"> Quantidade </th>
+                  <th width="20%"> Data de criação </th> 
+                  <th width="10%"> Categoria </th>
+                  <th width="10%"> Fornecedor </th>
+                  <th width="5%"> Editar </th>
+                  <th width="5%"> Deletar </th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for produto in produtos %}
+                <tr>
+                  <td> {{ produto.nome }} </td>
+                  <td> {{ produto.descricao }} </td>
+                  <td> {{ produto.preco }} </td>
+                  <td> {{ produto.quantidade }} </td>
+                  <td> {{ produto.data_criacao }} </td>
+                  <td> {{ produto.categoria_as_str() }} </td>
+                  <td> {{ produto.fornecedor_as_str() }} </td>
+                  <td>
+                      <a href="{{ url_for('admin.edit_produto', id=produto.id) }}">
+                      <i class="fa fa-pencil"></i> Editar
+                    </a>
+                  </td>
+                  <td>
+                      <a href="{{ url_for('admin.delete_produto', id=produto.id) }}">
+                      <i class="fa fa-trash"></i> Deletar 
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div style="text-align: center">
+        {% else %}
+          <div style="text-align: center">
+            <h3> Não existem produtos cadastrados </h3>
+            <hr class="intro-divider">
+        {% endif %}
+          <a href="{{ url_for('admin.add_produto') }}" class="btn btn-default btn-lg">
+            <i class="fa fa-plus"></i>
+            Adicionar produto
+          </a>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
