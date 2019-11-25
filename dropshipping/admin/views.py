@@ -64,7 +64,6 @@ def edit_fornecedor(id):
     fornecedor = Fornecedor.query.get_or_404(id)
 
     form = FornecedorEditForm(obj=fornecedor)
-    print(form.ativo.data)
 
     if form.validate_on_submit():
         fornecedor.nome_fantasia = form.nome_fantasia.data
@@ -109,7 +108,6 @@ def list_categorias():
     check_admin()
 
     categorias = Categoria.query.all()
-    print(len(categorias))
 
     return render_template('admin/categorias/list.html', categorias=categorias, title="Lista de Categorias Cadastradas")
 
@@ -170,11 +168,15 @@ def delete_categoria(id):
     check_admin()
 
     categoria = Categoria.query.get_or_404(id)
+    produtos_relacionados = Produto.query.filter_by(id_categoria=id).all()
 
-    db.session.delete(categoria)
-    db.session.commit()
+    if len(produtos_relacionados) > 0:
+        flash('Não é possível deletar a categoria: Existem produtos ativos pertencentes a esta categoria')
+    else:
+        db.session.delete(categoria)
+        db.session.commit()
 
-    flash('Categoria deletada com sucesso')
+        flash('Categoria deletada com sucesso')
 
     return redirect(url_for('admin.list_categorias'))
 
@@ -214,9 +216,6 @@ def add_produto():
         form = ProdutoForm()
         form.fornecedor.choices = [(f.id, f.nome_fantasia) for f in fornecedores]
         form.categoria.choices = [(c.id, c.nome) for c in categorias]
-
-        print('categoria')
-        print(form.categoria.data)
 
         if form.validate_on_submit():
             produto = Produto(nome=form.nome.data,
