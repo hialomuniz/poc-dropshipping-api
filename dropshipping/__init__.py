@@ -12,9 +12,6 @@ from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_restful import Api
 
-import dropshipping.api.resources as resources
-
-
 # local imports
 from config import app_config
 

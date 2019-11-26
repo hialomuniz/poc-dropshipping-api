@@ -73,7 +73,7 @@ a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:h
     padding-bottom: 50px;
     text-align: center;
     color: #4a3074;
-    background: url(../img/intro-bg.jpg) no-repeat center center;
+    /* background: url(../img/intro-bg.jpg) no-repeat center center; */
     background-size: cover;
     height: 100%;
 }
