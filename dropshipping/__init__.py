@@ -10,6 +10,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
+from flask_restful import Api
+
+import dropshipping.api.resources as resources
+
 
 # local imports
 from config import app_config
@@ -75,5 +79,18 @@ def create_app(config_name):
     @app.errorhandler(500)
     def internal_server_error(error):
         return render_template('errors/500.html', title='Erro genérico'), 500
+
+    import dropshipping.api.categorias.resources as api_categoria
+    import dropshipping.api.fornecedores.resources as api_fornecedor
+    import dropshipping.api.produtos.resources as api_produto
+
+    api = Api(app)
+
+    api.add_resource(api_categoria.CategoriaAPI, '/api/v1/categoria/<int:id>')
+    api.add_resource(api_categoria.ListaCategoriaAPI, '/api/v1/categoria')
+    api.add_resource(api_fornecedor.FornecedorAPI, '/api/v1/fornecedor/<int:id>')
+    api.add_resource(api_fornecedor.ListaFornecedorAPI, '/api/v1/fornecedor')
+    api.add_resource(api_produto.ProdutoAPI, '/api/v1/produto/<int:id>')
+    api.add_resource(api_produto.ListaProdutoAPI, '/api/v1/produto')
 
     return app
