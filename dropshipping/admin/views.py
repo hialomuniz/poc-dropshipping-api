@@ -222,7 +222,7 @@ def add_produto():
                               descricao=form.descricao.data,
                               preco=form.preco.data,
                               quantidade=form.quantidade.data,
-                              img=form.imagem.data,
+                              #img=form.imagem.data,
                               id_categoria=form.categoria.data,
                               id_fornecedor=form.fornecedor.data)
             try:
@@ -230,7 +230,8 @@ def add_produto():
                 db.session.commit()
 
                 flash('Produto adicionado com sucesso!')
-            except:
+            except Exception as e:
+                print(str(e))
                 flash('Erro ao adicionar produto!')
 
             return redirect(url_for('admin.list_produtos'))
@@ -268,7 +269,7 @@ def edit_produto(id):
         produto.descricao = form.descricao.data
         produto.preco = form.preco.data
         produto.quantidade = form.quantidade.data
-        produto.img = form.imagem.data
+        #produto.img = form.imagem.data
         produto.id_categoria = form.categoria.data
         produto.id_fornecedor = form.fornecedor.data
 

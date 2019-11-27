@@ -8,7 +8,7 @@ from dropshipping.models.usuario import Usuario
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated and current_user.tipo_usuario:
+    if current_user.is_authenticated:
         return redirect(url_for('home.dashboard'))
 
     form = LoginForm()
@@ -18,12 +18,9 @@ def login():
 
         # if usuario is not None and usuario.verify_password(form.password.data):
         if usuario is not None:
-            if usuario.tipo_usuario:
-                login_user(usuario)
+            login_user(usuario)
 
-                return redirect(url_for('home.dashboard'))
-            else:
-                flash('Este usuário não possui permissão para acessar o módulo administrativo!')
+            return redirect(url_for('home.dashboard'))
         else:
             flash('E-mail ou senha inválidos!')
 

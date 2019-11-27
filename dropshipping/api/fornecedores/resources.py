@@ -72,7 +72,7 @@ class FornecedorAPI(Resource):
         self.parser.add_argument('url', type=str, required=True,
                                  help='É necessário informar a URL de integração',
                                  location='json')
-        self.reqparse.add_argument('ativo', type=bool, location='json')
+        self.parser.add_argument('ativo', type=bool, location='json')
 
         super(FornecedorAPI, self).__init__()
 

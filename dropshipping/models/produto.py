@@ -23,7 +23,13 @@ class Produto(db.Model):
     promocoes = db.relationship('Promocao', secondary='produtopromocao')
 
     def fornecedor_as_str(self):
-        return Fornecedor.query.get(self.id_fornecedor).nome_fantasia
+        try:
+            return Fornecedor.query.get(self.id_fornecedor).nome_fantasia
+        except AttributeError:
+            return '-'
 
     def categoria_as_str(self):
-        return Categoria.query.get(self.id_categoria).nome
+        try:
+            return Categoria.query.get(self.id_categoria).nome
+        except AttributeError:
+            return '-'
