@@ -13,7 +13,7 @@ def start_application():
 
     logging.getLogger(__name__).info('Iniciando aplicação')
 
-    app.run(port=port)
+    app.run(host='0.0.0.0', port=port)
 
 
 if __name__ == '__main__':
